@@ -10,7 +10,7 @@ function WeatherApp() {
     wind: 10,
     precipitation: 20,
 })*/
-  const [weather,setWeather]=useState(null);
+  //const [weather,setWeather]=useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading]=useState(true);
   const [capetownWeather,setCapeTownWeather]=useState(null);
@@ -37,8 +37,8 @@ function WeatherApp() {
     const fetchWeather = async () => {
       try {
         const[ct,jhb]=await Promise.all([
-          fetch("http://localhost:5128/api/weather/capetown").then(r=>r.json()),
-          fetch("http://localhost:5128/api/weather/johannesburg").then(r=>r.json())
+          fetch("http://localhost:5128/api/weather/Cape Town, ZA").then(r=>r.json()),
+          fetch("http://localhost:5128/api/weather/Johannesburg").then(r=>r.json())
         ]);
         setCapeTownWeather(ct);
         setJohannesburgWeather(jhb);
