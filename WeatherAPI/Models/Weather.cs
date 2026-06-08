@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 namespace WeatherAPI.Models
 {
     public class Weather
@@ -17,6 +18,7 @@ namespace WeatherAPI.Models
         public List<WeatherDescription>? Weather { get; set; }
         public WindData? Wind { get; set; }
         public RainInfo? Rain { get; set; }
+
     }
     public class MainData
     {
@@ -25,7 +27,8 @@ namespace WeatherAPI.Models
     }
     public class WeatherDescription
     {
-        public string Condition { get; set; }
+        [JsonPropertyName("main")]
+        public string? Condition { get; set; }
     }
     public class WindData
     {
@@ -33,6 +36,30 @@ namespace WeatherAPI.Models
     }
     public class RainInfo
     {
+        [JsonPropertyName("1h")]
         public double OneHour { get; set; }
+    }
+
+    public class ForecastDay
+    {
+        public string Date { get; set; } = string.Empty;
+        public int Temp { get; set; }
+        public string Condition { get; set; } = string.Empty;
+        public int Humidity { get; set; }
+        public int WindSpeed { get; set; }
+        public int Precipitation { get; set; }
+    }
+    public class ForecastResponse
+    {
+        public List<ForecastItem> List { get; set; } = new List<ForecastItem>();
+    }
+    public class ForecastItem
+    {
+        public long Dt { get; set; }
+        public MainData? Main { get; set; }
+        public List<WeatherDescription>? Weather { get; set; }
+        public WindData? Wind { get; set; }
+        public RainInfo? Rain { get; set; }
+
     }
 }
