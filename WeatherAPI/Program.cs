@@ -6,8 +6,8 @@ builder.Services.AddOpenApi();
 builder.Services.AddControllers();
 builder.Services.AddHttpClient();
 
-var apiKey = Environment.GetEnvironmentVariable("API_KEY");
-builder.Configuration["OpenWeather:ApiKey"] = apiKey;
+//var apiKey = Environment.GetEnvironmentVariable("API_KEY");
+//builder.Configuration["OpenWeather:ApiKey"] = apiKey;
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowReact", policy =>
