@@ -30,20 +30,27 @@ namespace WeatherAPI.Controllers
             if (!response.IsSuccessStatusCode) return NotFound("Location not found\n" + response.StatusCode);
 
             var json = await response.Content.ReadFromJsonAsync<OpenWeatherResponse>();
-            if (json == null) return NotFound("Failed to parse weather data\n" + response.StatusCode);
+            if (json == null
+                || json.Main == null
+                || json.Wind == null
+                || json.Weather?.Any() != true)
+            {
+                return NotFound("Failed to parse weather data\n" + response.StatusCode);
+            }
+
             var weather = new Weather
             {
                 Location = json.Name?.Trim() ?? "Unknown",
                 Temp = (int)json.Main.Temp,
-                Condition = json.Weather?[0].Condition?? "Unknown",
+                Condition = json.Weather[0].Condition ?? "Unknown",
                 Humidity = json.Main.Humidity,
                 WindSpeed = (int)json.Wind.Speed,
                 Precipitation = json.Rain != null ? (int)json.Rain.OneHour : 0
             };
             return Ok(weather);
-           
+
         }
-//New endpoint to get weather by coordinates for users current location
+        //New endpoint to get weather by coordinates for users current location
         [HttpGet("coords")]
         public async Task<ActionResult<Weather>> GetWeatherByCoords(double lat, double lon)
         {
@@ -55,10 +62,17 @@ namespace WeatherAPI.Controllers
             if (!response.IsSuccessStatusCode) return NotFound("Location not found\n" + response.StatusCode);
 
             var json = await response.Content.ReadFromJsonAsync<OpenWeatherResponse>();
-            if (json == null) return NotFound("Failed to parse weather data\n" + response.StatusCode);
+            if (json == null
+                || json.Main == null
+                || json.Wind == null
+                || json.Weather?.Any() != true)
+            {
+                return NotFound("Failed to parse weather data\n" + response.StatusCode);
+            }
+
             var weather = new Weather
             {
-                Location = json.Name,
+                Location = json.Name?.Trim() ?? "Unknown",
                 Temp = (int)json.Main.Temp,
                 Condition = json.Weather?[0].Condition ?? "Unknown",
                 Humidity = json.Main.Humidity,
@@ -90,15 +104,15 @@ namespace WeatherAPI.Controllers
                 {
                     var midday = group.OrderBy(item => Math.Abs(DateTimeOffset.FromUnixTimeSeconds(item.Dt).Hour - 12)).First();
                     return new ForecastDay
-                
-                {
-                    Date = DateTimeOffset.FromUnixTimeSeconds(midday.Dt).ToString("ddd dd MMM"),
-                    Temp = (int)midday.Main.Temp,
-                    Condition = midday.Weather?[0].Condition ?? "Unknown",
-                    Humidity = midday.Main.Humidity,
-                    WindSpeed = (int)midday.Wind.Speed,
-                    Precipitation = midday.Rain != null ? (int)midday.Rain.OneHour : 0
-                };
+
+                    {
+                        Date = DateTimeOffset.FromUnixTimeSeconds(midday.Dt).ToString("ddd dd MMM"),
+                        Temp = (int)midday.Main.Temp,
+                        Condition = midday.Weather?[0].Condition ?? "Unknown",
+                        Humidity = midday.Main.Humidity,
+                        WindSpeed = (int)midday.Wind.Speed,
+                        Precipitation = midday.Rain != null ? (int)midday.Rain.OneHour : 0
+                    };
                 })
                 .ToList();
 
