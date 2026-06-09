@@ -17,7 +17,15 @@
 .env.development.local
 .env.test.local
 .env.production.local
+# React
+weather-app/node_modules/
+weather-app/.env
 
+# C#
+WeatherAPI/bin/
+WeatherAPI/obj/
+WeatherAPI/.env
+WeatherAPI/appsettings.Development.json
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
