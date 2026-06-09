@@ -75,7 +75,7 @@ function WeatherApp() {
   //Clearing the search results and restoring the default forecast, with error handling for fetch failures
   const handleClearSearch = async () => {
     setSearchResult(null);
-    setSearchCity("");
+    setSearchCity(defaultCity || "");
     setSearchError(null);
     if (defaultCity !== null) {
       try {
@@ -100,7 +100,7 @@ function WeatherApp() {
   //loading state with loading bar
   if (loading) return (
     <div className="loading-container">
-      <div className="spinner"></div>
+      <div className="spinner" data-testid="spinner"></div>
     </div>
 
   );
