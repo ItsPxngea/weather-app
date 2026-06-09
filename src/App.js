@@ -50,20 +50,21 @@ function WeatherApp() {
   //Calling the API to search for weather data based on user input, with error handling and loading state management
   const handleSearch = async () => {
     if (!searchCity.trim()) return;
-    setSearchResult(null);
+    //setSearchResult(null);
 
     try {
       const [weatherRes, forecastRes] = await Promise.all([
-        //fetch(`http://localhost:5128/api/weather/${encodeURIComponent(searchCity)}`),
+        fetch(`http://localhost:5128/api/weather/${encodeURIComponent(searchCity)}`),
+        
         fetch(`http://localhost:5128/api/weather/forecast/${encodeURIComponent(searchCity)}`)
       ]);
       if (!weatherRes.ok) throw new Error("City not found during search");
 
 
-      //const weatherData=await weatherRes.json();
+      const weatherData=await weatherRes.json();
       const forecastData = await forecastRes.json();
       setForecast(forecastData);
-      //setSearchResult(weatherData);
+      setSearchResult(weatherData);
     }
     catch (e) {
       setSearchError("Please enter a valid city name");
@@ -81,6 +82,7 @@ function WeatherApp() {
 
         const forecastRes = await fetch(`http://localhost:5128/api/weather/forecast/${encodeURIComponent(defaultCity)}`);
         const forecastData = await forecastRes.json();
+        setSearchCity(forecastData.location);
         setForecast(forecastData);
       } catch (e) {
         setSearchError("Failed to restore forecast");
@@ -144,7 +146,7 @@ function WeatherApp() {
 
         {forecast.length > 0 && (
           <div className="forecast-container">
-            <h2 className="forecast-Area">{defaultCity}</h2>
+            <h2 className="forecast-Area">{searchResult?.location || defaultCity}</h2>
             <h2 className="forecast-title">7 Day Forecast</h2>
             <div className="forecast-row">
               {forecast.map((day, index) => (
